@@ -1,4 +1,4 @@
-package CapaNegocio;
+package CapaPresentacion;
 
 import java.awt.HeadlessException;
 import java.io.BufferedReader;

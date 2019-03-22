@@ -1,6 +1,6 @@
 package Main;
 
-import CapaNegocio.CargarFicheros;
+import CapaPresentacion.CargarFicheros;
 
 public class main {
 
