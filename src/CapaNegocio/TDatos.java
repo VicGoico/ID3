@@ -2,12 +2,10 @@ package CapaNegocio;
 
 import java.util.ArrayList;
 
-public class TDatos {
-	// Este atributo sobra
-	private AlgoritmoLogica logica;
-	
+public class TDatos {	
 	private String[] titulosColumnas;
 	private ArrayList<String[]> datos;
+	private String nombrePadre;
 
 	public TDatos(String[] titulosColumna, ArrayList<String[]> datos){
 		this.datos = datos;
@@ -25,5 +23,11 @@ public class TDatos {
 	}
 	public void setDatos(ArrayList<String[]> cosas){
 		this.datos = cosas;
+	}
+	public String getNombrePadre(){
+		return this.nombrePadre;
+	}
+	public void setNombrePadre(String padre){
+		this.nombrePadre = padre;
 	}
 }
