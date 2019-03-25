@@ -3,31 +3,34 @@ package CapaNegocio;
 import java.util.ArrayList;
 
 public class TDatos {	
-	private String[] titulosColumnas;
+	private String hijo_tipo;
 	private ArrayList<String[]> datos;
-	private String nombrePadre;
+	private TDatos padre;
 
-	public TDatos(String[] titulosColumna, ArrayList<String[]> datos){
+	public TDatos(ArrayList<String[]> datos, String hijo_tipo){
 		this.datos = datos;
-		this.titulosColumnas = titulosColumna;
+		this.hijo_tipo = hijo_tipo;
+		this.padre = null;
 	}
 	
-	public String[] getTitulosColumna(){
-		return this.titulosColumnas;
+	public TDatos getPadre(){
+		return this.padre;
 	}
-	public void setTitulosColumna(String[] cosa){
-		this.titulosColumnas = cosa;
+	public void setPadre(TDatos padre){
+		this.padre = padre;
 	}
+	
 	public ArrayList<String[]> getDatos(){
 		return this.datos;
 	}
 	public void setDatos(ArrayList<String[]> cosas){
 		this.datos = cosas;
 	}
-	public String getNombrePadre(){
-		return this.nombrePadre;
+	
+	public String getHijoTipo(){
+		return this.hijo_tipo;
 	}
-	public void setNombrePadre(String padre){
-		this.nombrePadre = padre;
+	public void setHijoTipo(String hijo_tipo){
+		this.hijo_tipo = hijo_tipo;
 	}
 }

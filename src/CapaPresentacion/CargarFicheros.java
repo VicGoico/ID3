@@ -11,6 +11,8 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
+import CapaNegocio.AlgoritmoLogica;
+
 public class CargarFicheros {
 	private String nombreFichero1 = "AtributosJuego.txt";
 	private String nombreFicheroDatos = "Juego.txt";
@@ -29,8 +31,11 @@ public class CargarFicheros {
 			if (this.nombresColumna != null) {
 				this.cargarFicheroDatos();
 				if (!this.datos.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
-					// Continuar por aqui
+					//JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
+					// CONTINUAR POR AQUI
+					//VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
+					AlgoritmoLogica algoritmo = new AlgoritmoLogica();
+					algoritmo.primeraVuelta(nombresColumna, datos);
 					pintar();
 				} else {
 					JOptionPane.showMessageDialog(null, "Esta vacio el fichero: " + this.nombreFicheroDatos);
@@ -39,6 +44,7 @@ public class CargarFicheros {
 				JOptionPane.showMessageDialog(null, "Esta vacio el fichero: " + this.nombreFichero1);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Excepcion");
 			JOptionPane.showMessageDialog(null, "Fallo al leer los fichero");
 		}
