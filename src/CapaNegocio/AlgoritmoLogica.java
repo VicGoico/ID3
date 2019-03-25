@@ -33,8 +33,8 @@ public class AlgoritmoLogica {
 		// Mirar positivo o negativo, si o no
 		int tam_1 = tam-1;
 		
-		System.out.println("Tamano de columnas: "+tam);
-		System.out.println("Tamano de filas: "+tablaConDatos.size());
+		/*System.out.println("Tamano de columnas: "+tam);
+		System.out.println("Tamano de filas: "+tablaConDatos.size());*/
 		
 		// For que se recorre las columnas
 		for(int i = 0; i < tam_1; i++){
