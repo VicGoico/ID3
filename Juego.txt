@@ -12,3 +12,4 @@ soleado,templado,normal,verdad,si
 nublado,templado,alta,verdad,si
 nublado,caluroso,normal,falso,si
 lluvioso,templado,alta,verdad,no
+

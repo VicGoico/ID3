@@ -70,7 +70,9 @@ public class CargarFicheros {
 		while ((cadena = b.readLine()) != null) {
 			//System.out.println(cadena);
 			String[] aux = cadena.split(",");
-			this.datos.add(aux);
+			// Para que no coja lineas en blanco
+			if(!aux[0].equalsIgnoreCase(""))
+				this.datos.add(aux);
 			
 		}
 		b.close();

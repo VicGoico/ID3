@@ -24,7 +24,7 @@ public class AlgoritmoLogica {
 	}
 	
 	public void primeraVuelta(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
-		double minMerito = 0;
+		double minMerito = 100.0;
 		int columnaTitulo;
 		ArrayList<Double> meritos = new ArrayList<>();
 		
@@ -48,7 +48,7 @@ public class AlgoritmoLogica {
 				String nombre = tablaConDatos.get(j)[i];
 				String siOno = tablaConDatos.get(j)[tam_1];
 				TResultadosOperaciones guardar;
-				System.out.println("Num: "+ j +"Nombre: "+nombre);
+				//System.out.println("Num: "+ j +"Nombre: "+nombre);
 				if(!numTipos.containsKey(nombre)){
 					guardar = new TResultadosOperaciones(nombre);
 					guardar.setTotal(1);
@@ -92,8 +92,14 @@ public class AlgoritmoLogica {
 				meritoParticular += guardar.getR()*infor(guardar.getPositivo(), guardar.getNegativo());
 			}
 			meritos.add(meritoParticular);
+			if(minMerito > meritoParticular){
+				minMerito = meritoParticular;
+				columnaTitulo = i;
+			}
 			
 		}
+		System.out.println("Mas pequeño es: "+minMerito);
+		
 		
 		// Esto es para ver el resultado final
 		for(int i = 0; i < meritos.size(); i++){
