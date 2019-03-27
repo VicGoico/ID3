@@ -116,19 +116,15 @@ public class AlgoritmoLogica {
 					// SI coincide con el nombre de a columna que estoy buscando se mete
 					if(tablaConDatos.get(i)[columnaTitulo].equalsIgnoreCase(nombre)){
 						// Actulizo el array y no tengo en cuenta el dato que se convierte en NOMBRE
-						String[] aux = new String[tablaConDatos.get(i).length];
+						String[] aux = new String[tablaConDatos.get(i).length-1];
 						int cont = 0;
-						for(int j = 0; j < aux.length; j++){
+						for(int j = 0; j < tablaConDatos.get(i).length; j++){
 							if(!tablaConDatos.get(i)[j].equalsIgnoreCase(nombre)){
 								aux[cont] = tablaConDatos.get(i)[j];
 								cont++;
 							}
 						}
-						String [] aux1 = new String[aux.length-1];
-						for(int j = 0; j < aux1.length; j++){
-							aux1[j] = aux[j];
-						}
-						datos.add(aux1);
+						datos.add(aux);
 					}
 					
 				}
