@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import CapaNegocio.AlgoritmoLogica;
@@ -24,17 +25,9 @@ public class VentanaPrinicpal extends JFrame {
 	private AlgoritmoLogica algoritmo;
 	
 	private JLabel mensaje;
-	private JTextField lienzo;
+	private JTextArea lienzo;
 	private JButton otraVuelta;
 	private JButton salir;
-	
-	// Atributos 
-	/*
-	 * JLabel
-	 * JTextField (ScrollBar)
-	 * 2 JButton
-	*/
-	
 	
 	public VentanaPrinicpal(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
 		
@@ -55,27 +48,25 @@ public class VentanaPrinicpal extends JFrame {
 		 this.setLocationRelativeTo(null);
 		 //this.setResizable(false);
 		 
-		 this.setSize(600, 100);
+		 this.setSize(600, 400);
 		 this.setLocation(400, 200);
 		 this.setLayout(new BorderLayout());
 		 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		 
-		 JPanel panel = new JPanel();
-		 panel.setLayout(new GridLayout(2, 1));
 		 this.mensaje = new JLabel("Arbol generado");
-		 panel.add(this.mensaje);
-		 this.lienzo = new JTextField();
+		 
+		 this.add(this.mensaje, BorderLayout.NORTH);
+		 
+		 
+		 this.lienzo = new JTextArea();
 		 this.lienzo.setEditable(false);
 		 // Probar cual es el mejor tamaño
-		 this.lienzo.setSize(300, 500);
-		 JPanel panel2 = new JPanel();
-		// panel2.setLayout();
-		 panel2.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-		 panel.add(panel2);
-		 this.add(panel, BorderLayout.CENTER);
+		 this.lienzo.setSize(900, 900);
+		 
+		 this.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 		 
 		 
-		 panel = new JPanel();
+		 JPanel panel = new JPanel();
 		 panel.setLayout(new FlowLayout());
 		 this.otraVuelta = new JButton("Otra vuelta");
 		 this.otraVuelta.addActionListener(new ActionListener() {
@@ -83,6 +74,7 @@ public class VentanaPrinicpal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Dar otra vuelta");
+				lienzo.setText(lienzo.getText()+ System.lineSeparator()+"Dio una vuelta");
 			}
 		});
 		panel.add(this.otraVuelta);

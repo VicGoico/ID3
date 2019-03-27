@@ -34,10 +34,10 @@ public class CargarFicheros {
 					//JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
 					// CONTINUAR POR AQUI
 					//VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
-					/*AlgoritmoLogica algoritmo = new AlgoritmoLogica();
+					AlgoritmoLogica algoritmo = new AlgoritmoLogica();
 					algoritmo.primeraVuelta(nombresColumna, datos);
-					pintar();*/
-					VentanaPrinicpal ve = new VentanaPrinicpal();
+					//pintar();
+					//VentanaPrinicpal ve = new VentanaPrinicpal();
 				} else {
 					JOptionPane.showMessageDialog(null, "Esta vacio el fichero: " + this.nombreFicheroDatos);
 				}
