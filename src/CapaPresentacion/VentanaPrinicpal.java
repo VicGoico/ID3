@@ -35,7 +35,7 @@ public class VentanaPrinicpal extends JFrame {
 		
 		
 		this.algoritmo = new AlgoritmoLogica();
-		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos);
+		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
 		
 		
 	}

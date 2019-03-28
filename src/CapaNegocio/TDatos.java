@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class TDatos {	
 	private String hijo_tipo;
+	private String[] titulos;
 	private ArrayList<String[]> datos;
 	private TDatos padre;
 
@@ -11,6 +12,13 @@ public class TDatos {
 		this.datos = datos;
 		this.hijo_tipo = hijo_tipo;
 		this.padre = null;
+	}
+	
+	public String[] getTitulos(){
+		return this.titulos;
+	}
+	public void setTitulos(String[] titulos){
+		this.titulos = titulos;
 	}
 	
 	public TDatos getPadre(){

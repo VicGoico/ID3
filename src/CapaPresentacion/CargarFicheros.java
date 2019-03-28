@@ -35,7 +35,14 @@ public class CargarFicheros {
 					// CONTINUAR POR AQUI
 					//VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
 					AlgoritmoLogica algoritmo = new AlgoritmoLogica();
-					algoritmo.primeraVuelta(nombresColumna, datos);
+					algoritmo.primeraVuelta(nombresColumna, datos, null);
+					algoritmo.darVueltas();
+					algoritmo.darVueltas();
+					algoritmo.darVueltas();
+					algoritmo.darVueltas();
+					/*algoritmo.darVueltas();*/
+					algoritmo.pintar();
+					
 					//pintar();
 					//VentanaPrinicpal ve = new VentanaPrinicpal();
 				} else {
