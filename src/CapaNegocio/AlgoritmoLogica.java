@@ -1,13 +1,14 @@
 package CapaNegocio;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AlgoritmoLogica {
-	private boolean cierto;
 	private String[] titulos;
 	private ArrayList<String[]> tablaDatos;
-	private HashMap<String, TDatos> inforGeneral;// String: hijoTipo y TDatos, todo el nodo
+	private HashMap<Integer, ArrayList<TDatos>> inforGeneral;// Integer: Numero de vueltas, ArrayList<TDatos>: informacion de cada nivel
+	private int nivel = 0;
 	
 	// Todos los nodos del mismo nivel del arbol(grafo)
 	private ArrayList<TDatos> mirar;
@@ -23,8 +24,10 @@ public class AlgoritmoLogica {
 	public AlgoritmoLogica(){
 		this.mirar = new ArrayList<>();// Getters y setter de este atributo
 		this.inforGeneral = new HashMap<>();
-		this.cierto = true;
 		this.pintarTDatos = new ArrayList<>();
+		//Nuevo
+		this.inforGeneral = new HashMap<>();
+		this.nivel = 0;
 	}
 	
 	public void primeraVuelta(String[] titulosColumna, ArrayList<String[]> tablaConDatos, TDatos padre) {
@@ -184,6 +187,9 @@ public class AlgoritmoLogica {
 		for(TDatos datillos : meterEnMirar){
 			this.mirar.add(datillos);
 		}
+		if(padre == null){
+			this.inforGeneral.put(this.nivel, this.mirar);
+		}
 		/*System.out.println("Acabo");
 		System.out.println("----------------------------------------------------------");
 		System.out.println("----------------------------------------------------------");
@@ -204,38 +210,74 @@ public class AlgoritmoLogica {
 	}
 	
 	public void darVueltas() {
+		// Esto me servira para mas adelante
 		boolean cierto = true;
 		ArrayList<TDatos> auxMirar = this.mirar;
 
 		this.mirar = new ArrayList<>();
+		this.pintarTDatos = new ArrayList<>();
 		if(auxMirar.isEmpty()){
 			System.out.println("No se puede mas");
 		}
 		else{
+			this.nivel++;
 			for (TDatos nodo : auxMirar){
-				//this.inforGeneral.put(nodo.getHijoTipo(), nodo);
-				// Revisar esto
 				if(nodo.getDatos().size() == 1 && nodo.getDatos().get(0).length == 1)
 					this.pintarTDatos.add(nodo);
-				else	
+				else {
+					this.pintarTDatos.add(nodo);
 					primeraVuelta(nodo.getTitulos(), nodo.getDatos(), nodo);
-				
+				}
+				this.inforGeneral.put(this.nivel, this.pintarTDatos);
 			}
-		}
-		
-		
-		
+		}		
 		if (auxMirar.isEmpty()) {
 			cierto = false;
 		}
-
 	}
+	public void pintar2(){
+		int cont = 1;
+		String general = "";
+		
+		ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
+		for(TDatos data: pintar){
+			boolean cierto = true;
+			String pinto = "";
+			String tabla = "";
+			while(data != null){
+				pinto += data.getHijoTipo() + "	";
+				
+				if(cierto){
+					cierto = false;
+					tabla += pintaTabla(data.getDatos());
+				}
+				data = data.getPadre();
+			}
+			System.out.println(cont + " " + pinto +System.lineSeparator()+tabla);
+			cont++;
+		}
+		System.out.println(general);
+	}
+	private String pintaTabla(ArrayList<String[]> datos){
+		String tabla = "";
+		for(int i = 0; i < datos.size(); i++){
+			for(int j = 0; j < datos.get(0).length; j++){
+				//System.out.print();
+				tabla += datos.get(i)[j]+ "	";
+			}
+			tabla += System.lineSeparator();
+			//System.out.println("");
+		}
+		return tabla;
+	}
+	
 	public void pintar(){
 		int cont = 1;
 		for(TDatos data: this.pintarTDatos){
 			boolean cierto = true;
 			String pinto = "";
 			while(data != null){
+				// Para coger el + o -, final
 				if(cierto){
 					cierto = false;
 					pinto += data.getDatos().get(0)[0] + "	"; 

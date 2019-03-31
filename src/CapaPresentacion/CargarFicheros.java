@@ -40,9 +40,10 @@ public class CargarFicheros {
 					algoritmo.darVueltas();
 					algoritmo.darVueltas();
 					algoritmo.darVueltas();
-					/*algoritmo.darVueltas();*/
-					algoritmo.pintar();
+					algoritmo.darVueltas();
+					algoritmo.pintar2();
 					
+					// Para ver si ha cargado bien los datos
 					//pintar();
 					//VentanaPrinicpal ve = new VentanaPrinicpal();
 				} else {
@@ -53,7 +54,7 @@ public class CargarFicheros {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Excepcion");
+			System.out.println("Excepcion En CargarFicheros");
 			JOptionPane.showMessageDialog(null, "Fallo al leer los fichero");
 		}
 	}
@@ -70,6 +71,7 @@ public class CargarFicheros {
 			System.out.println("");
 		}
 	}
+	
 
 	private void cargarFicheroDatos() throws IOException {
 		String cadena;
