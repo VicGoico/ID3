@@ -7,11 +7,13 @@ public class TDatos {
 	private String[] titulos;
 	private ArrayList<String[]> datos;
 	private TDatos padre;
+	private int lineaMAX;
 
 	public TDatos(ArrayList<String[]> datos, String hijo_tipo){
 		this.datos = datos;
 		this.hijo_tipo = hijo_tipo;
 		this.padre = null;
+		this.lineaMAX = 0;
 	}
 	
 	public String[] getTitulos(){
@@ -40,5 +42,17 @@ public class TDatos {
 	}
 	public void setHijoTipo(String hijo_tipo){
 		this.hijo_tipo = hijo_tipo;
+	}
+	public int getLineaMAX(){
+		for(String [] aux: this.datos){
+			int cont = 0;
+			for(int i = 0; i < aux.length; i++){
+				cont += aux[i].length();
+			}
+			if(this.lineaMAX < cont){
+				this.lineaMAX = cont;
+			}
+		}
+		return this.lineaMAX;
 	}
 }

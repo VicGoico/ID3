@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JPopupMenu.Separator;
+
 public class AlgoritmoLogica {
 	private String[] titulos;
 	private ArrayList<String[]> tablaDatos;
@@ -14,6 +16,7 @@ public class AlgoritmoLogica {
 	private ArrayList<TDatos> mirar;
 	private ArrayList<String> nombresImpo;
 	private ArrayList<TDatos> pintarTDatos;
+	private ArrayList<String[]> todasLasRamas;
 	
 	// A lo mejor no hace falta que sean globales dentro de la clase, y nos valen con que sean locales
 	/*private double minMerito;
@@ -27,6 +30,7 @@ public class AlgoritmoLogica {
 		this.pintarTDatos = new ArrayList<>();
 		//Nuevo
 		this.inforGeneral = new HashMap<>();
+		this.todasLasRamas = new ArrayList<>();
 		this.nivel = 0;
 	}
 	
@@ -235,6 +239,140 @@ public class AlgoritmoLogica {
 			cierto = false;
 		}
 	}
+	private String ponerNLineasHorizontal(int n){
+		String result = "";
+		for(int i = 0; i < n; i++){
+			result += "|";
+		}
+		return result;
+	}
+	private String ponerNLineasVerticales(int n){
+		String result = "";
+		for(int i = 0; i < n; i++){
+			result += "-";
+		}
+		return result;
+	}
+	private String ponerNEspaciosEnBlanco(int n){
+		String result = "";
+		for(int i = 0; i < n; i++){
+			result += " ";
+		}
+		return result;
+	}
+	public void pintar4(){
+		ArrayList<String> todo = new ArrayList<>();
+		
+		ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
+		
+		int max = 0;
+		String total = "";
+		HashMap<String, Integer> posiciones = new HashMap<>();
+		// Primero me guardare las tablas
+		for(TDatos data: pintar){
+			String linea = "";
+			// Empezamos
+			if(total.equalsIgnoreCase("")){
+				ArrayList<String> ruta = new ArrayList<>();
+				String tabla = "";
+				boolean cierto = true;
+				// Miro toda la rama
+				while(data != null){
+					ruta.add(data.getHijoTipo());
+					
+					// Para coger la tabla
+					if(cierto){
+						cierto = false;
+						//for(int i = 0; i < data.getDatos().size(); i++){
+							tabla = pintaTabla(data.getDatos());
+						//}
+						
+					}
+					data = data.getPadre();
+				}
+				int fin = ruta.size();
+				for(int i = fin-1; i >= 0; i--){
+					String [] div = ruta.get(i).split(":");
+					posiciones.put(div[1], div[1].length()+3);
+					linea += div[1]+ponerNLineasVerticales(3);
+					
+					posiciones.put(div[0], div[0].length()+3);
+					linea += div[0]+ponerNLineasVerticales(3);
+				}
+				linea += tabla;
+				total += linea+System.lineSeparator();
+			}
+		}
+		System.out.println(total);
+		
+		
+	}
+	public void pintar3(){
+		String total = "";
+		
+		if(this.nivel == 0){
+			ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
+			int [] tamanos = new int[pintar.size()];
+			int pos = 0;
+			String [] principio = pintar.get(0).getHijoTipo().split(":");
+
+			total += principio[1]+System.lineSeparator();
+			
+			for(int i = 0; i < 3; i++){
+				total += ponerNLineasHorizontal(1)+System.lineSeparator();
+			}
+			
+			boolean primero = true;
+			for(TDatos data: pintar){
+				if(!primero){
+					total += ponerNLineasVerticales(3);
+					//manos[pos] += 3;
+					pos++;
+				}
+				else{
+					primero = false;
+				}
+				String jefe = data.getHijoTipo();
+				String[] aux = jefe.split(":");
+				//tamanos[pos] = data.getLineaMAX()-aux[0].length();
+				total += aux[0] + ponerNLineasVerticales(data.getLineaMAX());
+				
+				System.out.println();
+			}
+			total += System.lineSeparator();
+			for(int i = 0; i < 3; i++){
+				for(int j = 0; j < pintar.size(); j++){
+					System.out.println(tamanos[j]);
+					total += ponerNLineasHorizontal(1)+ponerNEspaciosEnBlanco(0)+" ";
+				}
+				total += System.lineSeparator();
+			}
+			int max = 0;
+			for(int i = 0; i < pintar.size(); i++){
+				if(max < pintar.get(i).getDatos().size()){
+					max = pintar.get(i).getDatos().size();
+				}
+			}
+			int i = 0;
+			while(i < max){
+				String linea = "";
+				for(TDatos data : pintar){
+					if(data.getDatos().size()<i){
+						linea += pintaTabla2(data.getDatos().get(i));
+					}
+					else{
+						linea += ponerNEspaciosEnBlanco(data.getLineaMAX());
+					}
+					linea += ponerNEspaciosEnBlanco(3);
+				}
+				total += linea+System.lineSeparator();
+				i++;
+			}
+		}
+		System.out.println(total);
+		
+	}
+	
 	public void pintar2(){
 		int cont = 1;
 		String general = "";
@@ -253,20 +391,29 @@ public class AlgoritmoLogica {
 				}
 				data = data.getPadre();
 			}
-			System.out.println(cont + " " + pinto +System.lineSeparator()+tabla);
+			String guardar = cont + " " + pinto + System.lineSeparator() +tabla;
+			System.out.println(guardar);
+			String [] aux = pinto.split("	");
+			this.todasLasRamas.add(aux);
 			cont++;
 		}
 		System.out.println(general);
+	}
+	private String pintaTabla2(String[] datos){
+		String tabla = "";
+		for(int j = 0; j < datos.length; j++){
+			tabla += datos[j]+ "	";
+		}
+		
+		return tabla;
 	}
 	private String pintaTabla(ArrayList<String[]> datos){
 		String tabla = "";
 		for(int i = 0; i < datos.size(); i++){
 			for(int j = 0; j < datos.get(0).length; j++){
-				//System.out.print();
 				tabla += datos.get(i)[j]+ "	";
 			}
 			tabla += System.lineSeparator();
-			//System.out.println("");
 		}
 		return tabla;
 	}
