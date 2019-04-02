@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -25,17 +26,31 @@ public class VentanaPrinicpal extends JFrame {
 	private AlgoritmoLogica algoritmo;
 	
 	private JLabel mensaje;
-	private JTextArea lienzo;
+	private JTable lienzo;
 	private JButton otraVuelta;
 	private JButton salir;
 	
+	private String[] columnas = {"Datos", "Datos","Datos","Datos","Datos",};
+	private Object[][] tabla;
+	
 	public VentanaPrinicpal(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
 		
+		System.out.println(titulosColumna.length);
+		
+		
+		this.algoritmo = new AlgoritmoLogica(titulosColumna);
+		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
+		while(this.algoritmo.darVueltas()){}
+		this.algoritmo.pintar2();
+		
+		
+		
+		
+		
+		this.tabla = (Object[][]) algoritmo.getTabla();
+		System.out.println(this.tabla.length);
 		init();
 		
-		
-		this.algoritmo = new AlgoritmoLogica();
-		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
 		
 		
 	}
@@ -58,13 +73,13 @@ public class VentanaPrinicpal extends JFrame {
 		 this.add(this.mensaje, BorderLayout.NORTH);
 		 
 		 
-		 this.lienzo = new JTextArea();
-		 this.lienzo.setEditable(false);
+		 this.lienzo = new JTable(this.tabla, this.columnas);
+		// this.lienzo.
 		 // Probar cual es el mejor tamaño
-		 this.lienzo.setSize(900, 900);
+		 //this.lienzo.setSize(900, 900);
 		 
-		 this.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-		 
+		 //this.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+		 this.add(this.lienzo, BorderLayout.CENTER);
 		 
 		 JPanel panel = new JPanel();
 		 panel.setLayout(new FlowLayout());
@@ -74,7 +89,6 @@ public class VentanaPrinicpal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Dar otra vuelta");
-				lienzo.setText(lienzo.getText()+ System.lineSeparator()+"Dio una vuelta");
 			}
 		});
 		panel.add(this.otraVuelta);
@@ -84,7 +98,7 @@ public class VentanaPrinicpal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Hasta luego");
+				//JOptionPane.showMessageDialog(null, "Hasta luego");
 				System.exit(0);
 			}
 		});
@@ -93,7 +107,7 @@ public class VentanaPrinicpal extends JFrame {
 		 
 		 
 		 this.setVisible(true);
-		 //this.pack();
+		 this.pack();
 	}
 
 }

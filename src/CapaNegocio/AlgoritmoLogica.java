@@ -17,6 +17,7 @@ public class AlgoritmoLogica {
 	private ArrayList<String> nombresImpo;
 	private ArrayList<TDatos> pintarTDatos;
 	private ArrayList<String[]> todasLasRamas;
+	private String[][] datos;
 	
 	// A lo mejor no hace falta que sean globales dentro de la clase, y nos valen con que sean locales
 	/*private double minMerito;
@@ -24,7 +25,8 @@ public class AlgoritmoLogica {
 	
 	
 	
-	public AlgoritmoLogica(){
+	public AlgoritmoLogica(String [] titulos){
+		this.titulos = titulos;
 		this.mirar = new ArrayList<>();// Getters y setter de este atributo
 		this.inforGeneral = new HashMap<>();
 		this.pintarTDatos = new ArrayList<>();
@@ -213,7 +215,7 @@ public class AlgoritmoLogica {
 		return Math.log10(dato)/Math.log10(2);
 	}
 	
-	public void darVueltas() {
+	public boolean darVueltas() {
 		// Esto me servira para mas adelante
 		boolean cierto = true;
 		ArrayList<TDatos> auxMirar = this.mirar;
@@ -222,6 +224,7 @@ public class AlgoritmoLogica {
 		this.pintarTDatos = new ArrayList<>();
 		if(auxMirar.isEmpty()){
 			System.out.println("No se puede mas");
+			cierto = false;
 		}
 		else{
 			this.nivel++;
@@ -235,155 +238,48 @@ public class AlgoritmoLogica {
 				this.inforGeneral.put(this.nivel, this.pintarTDatos);
 			}
 		}		
-		if (auxMirar.isEmpty()) {
-			cierto = false;
-		}
+		return cierto;
 	}
-	private String ponerNLineasHorizontal(int n){
-		String result = "";
-		for(int i = 0; i < n; i++){
-			result += "|";
-		}
-		return result;
-	}
-	private String ponerNLineasVerticales(int n){
-		String result = "";
-		for(int i = 0; i < n; i++){
-			result += "-";
-		}
-		return result;
-	}
-	private String ponerNEspaciosEnBlanco(int n){
+	public String ponerNEspacios(int n){
 		String result = "";
 		for(int i = 0; i < n; i++){
 			result += " ";
 		}
 		return result;
 	}
-	public void pintar4(){
-		ArrayList<String> todo = new ArrayList<>();
-		
-		ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
-		
-		int max = 0;
-		String total = "";
-		HashMap<String, Integer> posiciones = new HashMap<>();
-		// Primero me guardare las tablas
-		for(TDatos data: pintar){
-			String linea = "";
-			// Empezamos
-			if(total.equalsIgnoreCase("")){
-				ArrayList<String> ruta = new ArrayList<>();
-				String tabla = "";
-				boolean cierto = true;
-				// Miro toda la rama
-				while(data != null){
-					ruta.add(data.getHijoTipo());
-					
-					// Para coger la tabla
-					if(cierto){
-						cierto = false;
-						//for(int i = 0; i < data.getDatos().size(); i++){
-							tabla = pintaTabla(data.getDatos());
-						//}
-						
-					}
-					data = data.getPadre();
-				}
-				int fin = ruta.size();
-				for(int i = fin-1; i >= 0; i--){
-					String [] div = ruta.get(i).split(":");
-					posiciones.put(div[1], div[1].length()+3);
-					linea += div[1]+ponerNLineasVerticales(3);
-					
-					posiciones.put(div[0], div[0].length()+3);
-					linea += div[0]+ponerNLineasVerticales(3);
-				}
-				linea += tabla;
-				total += linea+System.lineSeparator();
-			}
-		}
-		System.out.println(total);
-		
-		
-	}
-	public void pintar3(){
-		String total = "";
-		
-		if(this.nivel == 0){
-			ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
-			int [] tamanos = new int[pintar.size()];
-			int pos = 0;
-			String [] principio = pintar.get(0).getHijoTipo().split(":");
-
-			total += principio[1]+System.lineSeparator();
-			
-			for(int i = 0; i < 3; i++){
-				total += ponerNLineasHorizontal(1)+System.lineSeparator();
-			}
-			
-			boolean primero = true;
-			for(TDatos data: pintar){
-				if(!primero){
-					total += ponerNLineasVerticales(3);
-					//manos[pos] += 3;
-					pos++;
-				}
-				else{
-					primero = false;
-				}
-				String jefe = data.getHijoTipo();
-				String[] aux = jefe.split(":");
-				//tamanos[pos] = data.getLineaMAX()-aux[0].length();
-				total += aux[0] + ponerNLineasVerticales(data.getLineaMAX());
-				
-				System.out.println();
-			}
-			total += System.lineSeparator();
-			for(int i = 0; i < 3; i++){
-				for(int j = 0; j < pintar.size(); j++){
-					System.out.println(tamanos[j]);
-					total += ponerNLineasHorizontal(1)+ponerNEspaciosEnBlanco(0)+" ";
-				}
-				total += System.lineSeparator();
-			}
-			int max = 0;
-			for(int i = 0; i < pintar.size(); i++){
-				if(max < pintar.get(i).getDatos().size()){
-					max = pintar.get(i).getDatos().size();
-				}
-			}
-			int i = 0;
-			while(i < max){
-				String linea = "";
-				for(TDatos data : pintar){
-					if(data.getDatos().size()<i){
-						linea += pintaTabla2(data.getDatos().get(i));
-					}
-					else{
-						linea += ponerNEspaciosEnBlanco(data.getLineaMAX());
-					}
-					linea += ponerNEspaciosEnBlanco(3);
-				}
-				total += linea+System.lineSeparator();
-				i++;
-			}
-		}
-		System.out.println(total);
-		
-	}
-	
-	public void pintar2(){
+	public String pintar2(){
 		int cont = 1;
 		String general = "";
+		String tab = "    ";
+		boolean titu = true;
+		
 		
 		ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
+		this.datos = new String[pintar.size()][this.titulos.length];
+		System.out.println(this.titulos.length);
+		int [] maxTam = new int[this.titulos.length];
+		
+		for(int i = 0; i < this.titulos.length; i++){
+			maxTam[i] = this.titulos[i].length();
+		}
+		int ii = 0;
+		
 		for(TDatos data: pintar){
+			int j = 0;
 			boolean cierto = true;
 			String pinto = "";
 			String tabla = "";
+			int pos = this.titulos.length-1;
 			while(data != null){
-				pinto += data.getHijoTipo() + "	";
+				String [] div = data.getHijoTipo().split(":");
+				
+				
+				if(div[0].length() > maxTam[pos]){
+					maxTam[pos] = div[0].length();
+				}
+				pos--;
+				pinto += div[0] + tab;
+				
 				
 				if(cierto){
 					cierto = false;
@@ -391,22 +287,34 @@ public class AlgoritmoLogica {
 				}
 				data = data.getPadre();
 			}
-			String guardar = cont + " " + pinto + System.lineSeparator() +tabla;
-			System.out.println(guardar);
-			String [] aux = pinto.split("	");
-			this.todasLasRamas.add(aux);
+			// Reordeno
+			String [] div = pinto.split(tab);
+			pinto ="";
+			
+			pos = 0;
+			for(int i = div.length-1; i >= 0; i--){
+				if(div[i].length()<maxTam[pos]){
+					div[i] += ponerNEspacios(maxTam[pos]-div[i].length());
+				}
+				this.datos[ii][j] = div[i];
+				j++;
+				pos++;
+				pinto += div[i]+ tab +" ";
+			}
+			this.datos[ii][j] = tabla;
+			String linea =  pinto + tab + tabla;
+			String guardar = cont + "\t" + linea;
+			general += guardar;
+			//System.out.println(guardar);
 			cont++;
+			ii++;
 		}
 		System.out.println(general);
+		return general;
 	}
-	private String pintaTabla2(String[] datos){
-		String tabla = "";
-		for(int j = 0; j < datos.length; j++){
-			tabla += datos[j]+ "	";
-		}
-		
-		return tabla;
-	}
+	
+	
+	
 	private String pintaTabla(ArrayList<String[]> datos){
 		String tabla = "";
 		for(int i = 0; i < datos.size(); i++){
@@ -418,7 +326,7 @@ public class AlgoritmoLogica {
 		return tabla;
 	}
 	
-	public void pintar(){
+	/*public void pintar(){
 		int cont = 1;
 		for(TDatos data: this.pintarTDatos){
 			boolean cierto = true;
@@ -435,5 +343,15 @@ public class AlgoritmoLogica {
 			System.out.println(cont + "	" + pinto);
 			cont++;
 		}
+	}*/
+	// Busca si la rama que nos ha metido el usuario existe
+	public boolean search(String [] data){
+		boolean cierto = true;
+		
+		return cierto;
+	}
+	
+	public String[][] getTabla(){
+		return this.datos;
 	}
 }

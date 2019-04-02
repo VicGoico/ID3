@@ -33,16 +33,13 @@ public class CargarFicheros {
 				if (!this.datos.isEmpty()) {
 					//JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
 					// CONTINUAR POR AQUI
-					//VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
-					AlgoritmoLogica algoritmo = new AlgoritmoLogica();
-					algoritmo.primeraVuelta(nombresColumna, datos, null);
-					/*algoritmo.darVueltas();
-					algoritmo.darVueltas();
-					algoritmo.darVueltas();
-					algoritmo.darVueltas();
-					algoritmo.darVueltas();*/
-					algoritmo.pintar2();
-					algoritmo.pintar4();
+					VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
+					//AlgoritmoLogica algoritmo = new AlgoritmoLogica(nombresColumna);
+					/*algoritmo.primeraVuelta(nombresColumna, datos, null);
+					
+					while(algoritmo.darVueltas()){}
+					String respuesta = algoritmo.pintar2();*/
+					
 					// Para ver si ha cargado bien los datos
 					//pintar();
 					//VentanaPrinicpal ve = new VentanaPrinicpal();
