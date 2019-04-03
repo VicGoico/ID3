@@ -326,28 +326,39 @@ public class AlgoritmoLogica {
 		return tabla;
 	}
 	
-	/*public void pintar(){
-		int cont = 1;
-		for(TDatos data: this.pintarTDatos){
-			boolean cierto = true;
-			String pinto = "";
-			while(data != null){
-				// Para coger el + o -, final
-				if(cierto){
-					cierto = false;
-					pinto += data.getDatos().get(0)[0] + "	"; 
-				}
-				pinto += data.getHijoTipo() + "	";
-				data = data.getPadre();
-			}
-			System.out.println(cont + "	" + pinto);
-			cont++;
-		}
-	}*/
 	// Busca si la rama que nos ha metido el usuario existe
-	public boolean search(String [] data){
-		boolean cierto = true;
+	public boolean search(String [] data, String result){
+		boolean cierto = true, encontrado = false, noEsta = false;
+		ArrayList<String[]> mirar = new ArrayList<>();
+		for(int i = 0; i < this.datos.length; i++){
+			String [] aux = new String [this.datos[i].length];
+			for(int j = 0; j < this.datos[i].length; j++){
+				aux[j] = this.datos[i][j];
+			}
+			mirar.add(aux);
+		}
 		
+		for(int i = 0; i < data.length && cierto; i++){
+			ArrayList<String[]> leer = mirar;
+			mirar = new ArrayList<>();
+			for(int j = 0; j < leer.size(); j++){
+				String []aux = leer.get(j);
+				boolean salir = false;
+				for(int z = 0; z < aux.length && !salir; z++){
+					if(data[i].equalsIgnoreCase(aux[z])){
+						mirar.add(aux);
+						salir = true;
+					}
+				}	
+			}
+			if(mirar.isEmpty()){
+				cierto = false;
+			}
+			else{
+				result = mirar.get(0)[mirar.get(0).length-1];
+			}
+			
+		}
 		return cierto;
 	}
 	

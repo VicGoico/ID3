@@ -30,22 +30,27 @@ public class VentanaPrinicpal extends JFrame {
 	private JButton otraVuelta;
 	private JButton salir;
 	
-	private String[] columnas = {"Datos", "Datos","Datos","Datos","Datos",};
+	private String[] columnas;
 	private Object[][] tabla;
 	
+	private String[] titulosColumna;
+
+	
 	public VentanaPrinicpal(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
-		
-		System.out.println(titulosColumna.length);
-		
+		this.titulosColumna = titulosColumna;
 		
 		this.algoritmo = new AlgoritmoLogica(titulosColumna);
 		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
 		while(this.algoritmo.darVueltas()){}
 		this.algoritmo.pintar2();
+		int cont = 1;
+		for(int i= 1; i < titulosColumna.length-1; i++){
+			titulosColumna[i] = "Condición "+cont;
+			cont++;
+					
+		}
 		
-		
-		
-		
+		this.columnas = titulosColumna;
 		
 		this.tabla = (Object[][]) algoritmo.getTabla();
 		System.out.println(this.tabla.length);
@@ -68,18 +73,17 @@ public class VentanaPrinicpal extends JFrame {
 		 this.setLayout(new BorderLayout());
 		 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		 
-		 this.mensaje = new JLabel("Arbol generado");
+		 this.mensaje = new JLabel("Ramas generadas");
 		 
 		 this.add(this.mensaje, BorderLayout.NORTH);
 		 
 		 
 		 this.lienzo = new JTable(this.tabla, this.columnas);
-		// this.lienzo.
 		 // Probar cual es el mejor tamaño
-		 //this.lienzo.setSize(900, 900);
 		 
-		 //this.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-		 this.add(this.lienzo, BorderLayout.CENTER);
+		 this.lienzo.setEnabled(false);
+		 this.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+		// this.add(this.lienzo, BorderLayout.CENTER);
 		 
 		 JPanel panel = new JPanel();
 		 panel.setLayout(new FlowLayout());
@@ -89,6 +93,8 @@ public class VentanaPrinicpal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Dar otra vuelta");
+				VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance(), titulosColumna);
+				setVisible(false);
 			}
 		});
 		panel.add(this.otraVuelta);
@@ -109,5 +115,7 @@ public class VentanaPrinicpal extends JFrame {
 		 this.setVisible(true);
 		 this.pack();
 	}
-
+	public VentanaPrinicpal getInstance(){
+		return this;
+	}
 }
