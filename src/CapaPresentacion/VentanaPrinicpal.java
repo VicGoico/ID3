@@ -39,21 +39,23 @@ public class VentanaPrinicpal extends JFrame {
 	public VentanaPrinicpal(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
 		this.titulosColumna = titulosColumna;
 		
-		this.algoritmo = new AlgoritmoLogica(titulosColumna);
+		this.algoritmo = new AlgoritmoLogica(this.titulosColumna, tablaConDatos);
 		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
 		while(this.algoritmo.darVueltas()){}
 		this.algoritmo.pintar2();
 		int cont = 1;
-		for(int i= 1; i < titulosColumna.length-1; i++){
-			titulosColumna[i] = "Condición "+cont;
-			cont++;
-					
+		this.columnas = new String[titulosColumna.length];
+		String []primer = this.algoritmo.getInforGeneral().get(0).getHijoTipo().split(":");
+		this.columnas[0] = primer[1];
+		for(int i= 1; i < this.columnas.length-1; i++){
+			this.columnas[i] = "Condición "+cont;
+			cont++;	
 		}
+		// Añado el nombre del ultimo campo de los titulos
+		this.columnas[this.columnas.length-1] = this.titulosColumna[this.titulosColumna.length-1];
 		
-		this.columnas = titulosColumna;
 		
 		this.tabla = (Object[][]) algoritmo.getTabla();
-		System.out.println(this.tabla.length);
 		init();
 		
 		

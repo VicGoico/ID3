@@ -16,23 +16,18 @@ public class AlgoritmoLogica {
 	private ArrayList<TDatos> mirar;
 	private ArrayList<String> nombresImpo;
 	private ArrayList<TDatos> pintarTDatos;
-	private ArrayList<String[]> todasLasRamas;
-	private String[][] datos;
-	
-	// A lo mejor no hace falta que sean globales dentro de la clase, y nos valen con que sean locales
-	/*private double minMerito;
-	private int columnaDato;*/ // Como si fuera el ID*/
+	private String[][] datos;	
+	//private 
 	
 	
-	
-	public AlgoritmoLogica(String [] titulos){
+	public AlgoritmoLogica(String [] titulos, ArrayList<String[]> tablaDatos){
 		this.titulos = titulos;
+		this.tablaDatos = tablaDatos;
 		this.mirar = new ArrayList<>();// Getters y setter de este atributo
 		this.inforGeneral = new HashMap<>();
 		this.pintarTDatos = new ArrayList<>();
 		//Nuevo
 		this.inforGeneral = new HashMap<>();
-		this.todasLasRamas = new ArrayList<>();
 		this.nivel = 0;
 	}
 	
@@ -45,11 +40,6 @@ public class AlgoritmoLogica {
 		int tam = tablaConDatos.get(0).length;
 		// Mirar positivo o negativo, si o no
 		int tam_1 = tam - 1;
-
-		/*
-		 * System.out.println("Tamano de columnas: "+tam); System.out.println(
-		 * "Tamano de filas: "+tablaConDatos.size());
-		 */
 
 		// For que se recorre las columnas
 		for (int i = 0; i < tam_1; i++) {
@@ -149,59 +139,17 @@ public class AlgoritmoLogica {
 			TDatos nuevo = new TDatos(datos, nombre + ":" + titulosColumna[columnaTitulo]);
 
 			nuevo.setTitulos(titulosTDatos);
-
-			// Si es la primera vuelta no tienen PADRE
-			/*if (this.cierto) {
-				nuevo.setPadre(null);
-			} else {*/
 			nuevo.setPadre(padre);
-			//}
-
 			meterEnMirar.add(nuevo);
 		}
 
-		// Se cambiara en la primera vuelta
-		/*if (this.cierto) {
-			this.cierto = false;
-		}*/
-
-		// Pintar
-		/*String pppp = meterEnMirar.get(0).getHijoTipo();
-		String[] aux = pppp.split(":");
-
-		System.out.println(aux[1]);
-		for (int i = 0; i < meterEnMirar.size(); i++) {
-
-			System.out.println(meterEnMirar.get(i).getHijoTipo());
-
-			for (int j = 0; j < meterEnMirar.get(i).getDatos().size(); j++) {
-				for (int k = 0; k < meterEnMirar.get(i).getDatos().get(j).length; k++) {
-					System.out.print(meterEnMirar.get(i).getDatos().get(j)[k] + "	");
-				}
-				System.out.println("");
-			}
-			System.out.println("");
-		}*/
-
-		//System.out.println("Mas pequeño es: " + minMerito);
-
-		// Esto es para ver el resultado final
-		/*
-		 * for(int i = 0; i < meritos.size(); i++){
-		 * System.out.println(titulosColumna[i] + ": " + meritos.get(i)); }
-		 */
+		
 		for(TDatos datillos : meterEnMirar){
 			this.mirar.add(datillos);
 		}
 		if(padre == null){
 			this.inforGeneral.put(this.nivel, this.mirar);
 		}
-		/*System.out.println("Acabo");
-		System.out.println("----------------------------------------------------------");
-		System.out.println("----------------------------------------------------------");
-		System.out.println("----------------------------------------------------------");
-		System.out.println("----------------------------------------------------------");
-		System.out.println("----------------------------------------------------------");*/
 	}
 	
 	private double infor(double p, double n){
@@ -312,8 +260,7 @@ public class AlgoritmoLogica {
 		System.out.println(general);
 		return general;
 	}
-	
-	
+
 	
 	private String pintaTabla(ArrayList<String[]> datos){
 		String tabla = "";
@@ -364,5 +311,14 @@ public class AlgoritmoLogica {
 	
 	public String[][] getTabla(){
 		return this.datos;
+	}
+	public String[] getTitulos(){
+		return this.titulos;
+	}
+	public ArrayList<String[]> getTablaDatos(){
+		return this.tablaDatos;
+	}
+	public ArrayList<TDatos> getInforGeneral(){
+		return this.inforGeneral.get(0);
 	}
 }

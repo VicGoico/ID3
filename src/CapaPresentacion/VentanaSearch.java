@@ -6,10 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,8 +21,8 @@ import javax.swing.JTextField;
 import CapaNegocio.AlgoritmoLogica;
 
 public class VentanaSearch extends JFrame{
-	private JLabel mensaje;
-	private JTextField informacion;
+	//private JLabel mensaje;
+	//private JTextField informacion;
 	private JLabel respuesta;
 	
 	// Faltan estos botones
@@ -47,69 +49,107 @@ public class VentanaSearch extends JFrame{
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new FlowLayout());
+		
+		
+		this.respuesta = new JLabel("");
+			
+			
+		//panel.add(this.mensaje);
+		//panel.add(this.informacion);
+		ArrayList<JPanel> lista = generarPaneles();
+		for(JPanel miniPanel: lista){
+			panel2.add(miniPanel);
+		}
+		this.add(panel2, BorderLayout.CENTER);
+		
+		this.add(this.respuesta, BorderLayout.WEST);
+		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
 		
-		
-		this.mensaje = new JLabel("Introduce los datos para la busqueda:");
-		// Poner un ejemplo: condicion1:condicion2:condicion3
-		this.informacion = new JTextField("Ejemplo: condicion1:condicion2:condicion3");
-		// Borra el texto cuando hago click
-		this.informacion.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e){
-                informacion.setText("");
-            }
-		});
-		
-		this.respuesta = new JLabel("");
-		
-		
-		this.informacion.addActionListener(new ActionListener() {
+		this.buscar = new JButton("Buscar");
+		this.buscar.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String cadena = informacion.getText();
-				String [] aux = cadena.split(":");
-				boolean bien = true;
-				// String nombre de la condicion y Integer: numero de veces que aparece la condicion
-				HashMap<String, Integer> comprobar= new HashMap<>();
-				for(int i = 0; i < aux.length && bien; i++){
-					if(!comprobar.containsKey(aux[i])){
-						comprobar.put(aux[i], 1);
-					}
-					else{
-						bien = false;
-					}
-				}
+				String result = "";
+				String [] aux = new String [logica.getTitulos().length-1];
+				JPanel panelPrueba = (JPanel) panel2.getComponent(0);
+				JComboBox opcion = (JComboBox) panelPrueba.getComponent(1);
+				aux[0] = (String) opcion.getSelectedItem();
+				System.out.println("Salio: "+aux[0]);
 				
-				
-				if(bien){
-					if(cadena.length() == titulos.length-1){
-						String result = "";
-						if(logica.search(aux, result)){
-							respuesta.setText(result);
-						}
-						else{
-							respuesta.setText("No se encontro ninguna rama con esas condiciones");
-						}
-					}
-					else{
-						String res = "Pusiste mas condiciones de las permitidas"+System.lineSeparator()+"Max: "+(titulos.length-1);
-						JOptionPane.showMessageDialog(null, res);
-					}
-				}
-				else{
-					String res = "Repetiste 2 veces la misma condicion";
-					JOptionPane.showMessageDialog(null, res);
-				}
-				
+				/*if (logica.search(aux, result)) {
+					respuesta.setText(result);
+				} else {
+					respuesta.setText("No se encontro ninguna rama con esas condiciones");
+				}*/
 			}
 		});
-		panel.add(this.mensaje);
-		panel.add(this.informacion);
-		this.add(panel, BorderLayout.CENTER);
+		this.volverVentana = new JButton("Volver");
+		this.volverVentana.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				prin.setVisible(true);
+			}
+		});
+		panel.add(this.buscar);
+		panel.add(this.volverVentana);
 		
-		this.add(this.respuesta, BorderLayout.SOUTH);
+		this.add(panel, BorderLayout.SOUTH);
+		
 		this.setVisible(true);
+	}
+	// Para guardar todos los posibles valores
+	private HashMap<String, ArrayList<String>> dameHashMap(){
+		HashMap<String, ArrayList<String>> result = new HashMap<>();
+		ArrayList<String> pequeno;
+		HashMap<String, Integer> local;
+		
+		for(int j = 0; j < this.logica.getTitulos().length-1; j++){
+			pequeno = new ArrayList<>();
+			local = new HashMap<>();
+			for(int i = 0; i < this.logica.getTablaDatos().size(); i++){
+				if(!local.containsKey(this.logica.getTablaDatos().get(i)[j])){
+					local.put(this.logica.getTablaDatos().get(i)[j], 1);
+					pequeno.add(this.logica.getTablaDatos().get(i)[j]);
+				}
+			}
+			result.put(this.logica.getTitulos()[j], pequeno);
+		}
+		
+		
+		return result;
+	}
+	
+	private ArrayList<JPanel> generarPaneles(){
+		HashMap<String, ArrayList<String>> listar = dameHashMap();
+		ArrayList<JPanel> result = new ArrayList<>();
+		JPanel panel;
+		JLabel campo;
+		JComboBox opciones;
+		
+		
+		for(int i = 0; i < this.logica.getTitulos().length-1; i++){
+			String clave = this.logica.getTitulos()[i];
+			panel = new JPanel();
+			panel.setLayout(new FlowLayout());
+			
+			campo = new JLabel(clave);
+			opciones = new JComboBox<>();
+			for(String palabra: listar.get(clave)){
+				opciones.addItem(palabra);
+			}
+			panel.add(campo);
+			panel.add(opciones);
+			result.add(panel);
+		}
+		
+		
+		return result;
 	}
 }
