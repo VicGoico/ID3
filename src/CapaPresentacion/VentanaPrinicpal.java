@@ -89,12 +89,11 @@ public class VentanaPrinicpal extends JFrame {
 		 
 		 JPanel panel = new JPanel();
 		 panel.setLayout(new FlowLayout());
-		 this.otraVuelta = new JButton("Otra vuelta");
+		 this.otraVuelta = new JButton("Buscar una rama");
 		 this.otraVuelta.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Dar otra vuelta");
 				VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance(), titulosColumna);
 				setVisible(false);
 			}

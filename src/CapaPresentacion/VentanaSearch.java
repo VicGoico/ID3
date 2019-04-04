@@ -31,6 +31,7 @@ public class VentanaSearch extends JFrame{
 	
 	private AlgoritmoLogica logica;
 	private VentanaPrinicpal prin;
+	private ArrayList<JPanel> todosLosPaneles;
 
 	
 	public VentanaSearch(AlgoritmoLogica logica, VentanaPrinicpal prin, String[]titulos){
@@ -44,7 +45,7 @@ public class VentanaSearch extends JFrame{
 		this.setLocationRelativeTo(null);
 		// this.setResizable(false);
 		
-		this.setSize(600, 400);
+		this.setSize(800, 400);
 		this.setLocation(400, 200);
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,13 +59,13 @@ public class VentanaSearch extends JFrame{
 			
 		//panel.add(this.mensaje);
 		//panel.add(this.informacion);
-		ArrayList<JPanel> lista = generarPaneles();
-		for(JPanel miniPanel: lista){
+		this.todosLosPaneles = generarPaneles();
+		for(JPanel miniPanel: this.todosLosPaneles){
 			panel2.add(miniPanel);
 		}
-		this.add(panel2, BorderLayout.CENTER);
+		this.add(panel2, BorderLayout.NORTH);
 		
-		this.add(this.respuesta, BorderLayout.WEST);
+		this.add(this.respuesta, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
@@ -74,18 +75,20 @@ public class VentanaSearch extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String result = "";
-				String [] aux = new String [logica.getTitulos().length-1];
-				JPanel panelPrueba = (JPanel) panel2.getComponent(0);
-				JComboBox opcion = (JComboBox) panelPrueba.getComponent(1);
-				aux[0] = (String) opcion.getSelectedItem();
-				System.out.println("Salio: "+aux[0]);
+				HashMap<String, Integer> aux = new HashMap<>();
 				
-				/*if (logica.search(aux, result)) {
-					respuesta.setText(result);
+				for(int i = 0; i < todosLosPaneles.size(); i++){
+					JPanel panelPrueba = (JPanel) panel2.getComponent(i);
+					JComboBox opcion = (JComboBox) panelPrueba.getComponent(1);
+					aux.put((String) opcion.getSelectedItem(), 1);
+				}
+				
+				
+				if (logica.search(aux)) {
+					respuesta.setText(logica.getRespuesta());
 				} else {
 					respuesta.setText("No se encontro ninguna rama con esas condiciones");
-				}*/
+				}
 			}
 		});
 		this.volverVentana = new JButton("Volver");

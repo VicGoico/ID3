@@ -17,6 +17,7 @@ public class AlgoritmoLogica {
 	private ArrayList<String> nombresImpo;
 	private ArrayList<TDatos> pintarTDatos;
 	private String[][] datos;	
+	private String respuesta;
 	//private 
 	
 	
@@ -266,45 +267,41 @@ public class AlgoritmoLogica {
 		String tabla = "";
 		for(int i = 0; i < datos.size(); i++){
 			for(int j = 0; j < datos.get(0).length; j++){
-				tabla += datos.get(i)[j]+ "	";
+				tabla += datos.get(i)[j];//+ "	";
 			}
-			tabla += System.lineSeparator();
+			//tabla += System.lineSeparator();
 		}
 		return tabla;
 	}
 	
 	// Busca si la rama que nos ha metido el usuario existe
-	public boolean search(String [] data, String result){
-		boolean cierto = true, encontrado = false, noEsta = false;
-		ArrayList<String[]> mirar = new ArrayList<>();
-		for(int i = 0; i < this.datos.length; i++){
-			String [] aux = new String [this.datos[i].length];
-			for(int j = 0; j < this.datos[i].length; j++){
-				aux[j] = this.datos[i][j];
+	public boolean search(HashMap<String, Integer> data1){
+		boolean cierto = false;
+		// Buscar
+		ArrayList<TDatos> lista = this.inforGeneral.get(this.nivel);
+		int i = 0;
+		// Me miro todos los posibles TDatos, o sea todas las ramas finales
+		while(!cierto &&  i < lista.size()){
+			TDatos data = lista.get(i);
+			this.respuesta = pintaTabla(data.getDatos());
+			boolean mirar = false;
+			// Me recorro todo el TDato para ver que estan todas las condiciones de la rama
+			while (data != null && !mirar) {
+				String[] div = data.getHijoTipo().split(":");
+				// Miro todo el array que me han pasado para ver si coincidad
+				// alguna
+
+				if (data1.containsKey(div[0])) {
+					data = data.getPadre();
+				} else {
+					mirar = true;
+				}
 			}
-			mirar.add(aux);
-		}
-		
-		for(int i = 0; i < data.length && cierto; i++){
-			ArrayList<String[]> leer = mirar;
-			mirar = new ArrayList<>();
-			for(int j = 0; j < leer.size(); j++){
-				String []aux = leer.get(j);
-				boolean salir = false;
-				for(int z = 0; z < aux.length && !salir; z++){
-					if(data[i].equalsIgnoreCase(aux[z])){
-						mirar.add(aux);
-						salir = true;
-					}
-				}	
+			// Miro si ha salido la rama que estaba buscando
+			if(!mirar){
+				cierto = true;
 			}
-			if(mirar.isEmpty()){
-				cierto = false;
-			}
-			else{
-				result = mirar.get(0)[mirar.get(0).length-1];
-			}
-			
+			i++;
 		}
 		return cierto;
 	}
@@ -320,5 +317,8 @@ public class AlgoritmoLogica {
 	}
 	public ArrayList<TDatos> getInforGeneral(){
 		return this.inforGeneral.get(0);
+	}
+	public String getRespuesta(){
+		return this.respuesta;
 	}
 }
