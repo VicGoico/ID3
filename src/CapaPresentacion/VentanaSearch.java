@@ -31,6 +31,9 @@ public class VentanaSearch extends JFrame{
 	private JButton buscar;
 	private JButton volverVentana;
 	
+	private ImageIcon iconRespuesta;
+	private ImageIcon iconError;
+	
 	private AlgoritmoLogica logica;
 	private VentanaPrinicpal prin;
 	private ArrayList<JPanel> todosLosPaneles;
@@ -39,6 +42,8 @@ public class VentanaSearch extends JFrame{
 	public VentanaSearch(AlgoritmoLogica logica, VentanaPrinicpal prin){
 		this.logica = logica;
 		this.prin = prin;
+		this.iconRespuesta =  new ImageIcon(getClass().getResource("/images/resultado.png"));
+		this.iconError = new ImageIcon(getClass().getResource("/images/mal.png")); 
 		init();
 	}
 	private void init(){
@@ -87,15 +92,13 @@ public class VentanaSearch extends JFrame{
 				}
 				
 				// Llamada para ver si la rama existe con esos datos
-				if (logica.search(aux)) {				
-					ImageIcon icon = new ImageIcon("src/images/resultado.png");
-					icono.setIcon(icon);
+				if (logica.search(aux)) {
+					icono.setIcon(iconRespuesta);
 					
 					respuesta.setText(logica.getRespuesta());	
 					
 				} else {
-					ImageIcon icon = new ImageIcon("images/mal.png");
-					icono.setIcon(icon);
+					icono.setIcon(iconError);
 					respuesta.setText("No se encontro ninguna rama con esas condiciones");
 				}
 			}
