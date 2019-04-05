@@ -9,56 +9,56 @@ import javax.swing.JPopupMenu.Separator;
 public class AlgoritmoLogica {
 	private String[] titulos;
 	private ArrayList<String[]> tablaDatos;
-	private HashMap<Integer, ArrayList<TDatos>> inforGeneral;// Integer: Numero de vueltas, ArrayList<TDatos>: informacion de cada nivel
-	private int nivel = 0;
-	
 	// Todos los nodos del mismo nivel del arbol(grafo)
+	private HashMap<Integer, ArrayList<TDatos>> inforGeneral;
+	private int nivel = 0;
 	private ArrayList<TDatos> mirar;
 	private ArrayList<String> nombresImpo;
 	private ArrayList<TDatos> pintarTDatos;
 	private String[][] datos;	
 	private String respuesta;
-	//private 
 	
 	
 	public AlgoritmoLogica(String [] titulos, ArrayList<String[]> tablaDatos){
 		this.titulos = titulos;
 		this.tablaDatos = tablaDatos;
-		this.mirar = new ArrayList<>();// Getters y setter de este atributo
+		this.mirar = new ArrayList<>();
 		this.inforGeneral = new HashMap<>();
 		this.pintarTDatos = new ArrayList<>();
 		//Nuevo
 		this.inforGeneral = new HashMap<>();
 		this.nivel = 0;
 	}
-	
+	// Metodo mas importante del algoritmo, aqui 
+	// es donde se hacen todas las operaciones necesarias 
+	// para conseguir el resultado deseado
 	public void primeraVuelta(String[] titulosColumna, ArrayList<String[]> tablaConDatos, TDatos padre) {
 		double minMerito = 100.0;
 		int columnaTitulo = 0;
 		ArrayList<Double> meritos = new ArrayList<>();
 		ArrayList<TDatos> meterEnMirar = new ArrayList<>();
-
 		int tam = tablaConDatos.get(0).length;
-		// Mirar positivo o negativo, si o no
 		int tam_1 = tam - 1;
 
-		// For que se recorre las columnas
+		// Bucle que se recorre las columnas
 		for (int i = 0; i < tam_1; i++) {
 			ArrayList<String> nombres = new ArrayList<>();
 			HashMap<String, TResultadosOperaciones> numTipos = new HashMap<>();
-			String titulo = titulosColumna[i];
 
-			// For que se recorre las filas
+			// Bucle que se recorre las filas
 			for (int j = 0; j < tablaConDatos.size(); j++) {
 				// Miro que no este repetido
 				String nombre = tablaConDatos.get(j)[i];
 				String siOno = tablaConDatos.get(j)[tam_1];
 				TResultadosOperaciones guardar;
-				// System.out.println("Num: "+ j +"Nombre: "+nombre);
+				
+				// Miro que no este repetido, lo que quiere decir que es nuevo
+				// y por tanto lo inicializo
 				if (!numTipos.containsKey(nombre)) {
 					guardar = new TResultadosOperaciones(nombre);
 					guardar.setTotal(1);
 					nombres.add(nombre);
+					// Cuento las veces que es positivo o negativo, si o no, etc
 					if (siOno.equalsIgnoreCase("si")) {
 						guardar.setNumPositivos(1);
 					} else {
@@ -68,7 +68,6 @@ public class AlgoritmoLogica {
 
 				} else {
 					guardar = numTipos.get(nombre);
-					// System.out.println("Nombre: "+nombre);
 					guardar.setTotal(guardar.getTotal() + 1);
 
 					if (siOno.equalsIgnoreCase("si")) {
@@ -88,13 +87,17 @@ public class AlgoritmoLogica {
 				guardar.setNegativo(guardar.getNumNegativos() / (double) guardar.getTotal());
 				guardar.setR((double) guardar.getTotal() / (double) N);
 			}
+			// Fin del segundo conteo
 			// Tercer conteo
+			// Calculo los meritos
 			double meritoParticular = 0;
 			for (String nombre : nombres) {
 				TResultadosOperaciones guardar = numTipos.get(nombre);
 				meritoParticular += guardar.getR() * infor(guardar.getPositivo(), guardar.getNegativo());
 			}
 			meritos.add(meritoParticular);
+			
+			// Elijo el merito mas pequeño
 			if (minMerito > meritoParticular) {
 				minMerito = meritoParticular;
 				columnaTitulo = i;
@@ -102,6 +105,8 @@ public class AlgoritmoLogica {
 			}
 
 		}
+		
+		// Redimensiono la tabla de datos
 		String[] titulosTDatos = new String[titulosColumna.length - 1];
 		int contador = 0;
 		for (int i = 0; i < titulosColumna.length; i++) {
@@ -110,14 +115,12 @@ public class AlgoritmoLogica {
 				contador++;
 			}
 		}
-		// Para hacer los calculos en la primera vuelta
 
+		// Aqui nos guardaremos un ArrayList de tipo TDatos para una proxima vuelta
 		// Miro los nombres de un tipo determinado
 		for (String nombre : this.nombresImpo) {
-
 			// Matriz que se guardara en TDatos
 			ArrayList<String[]> datos = new ArrayList<>();
-
 			// Miro la matriz de datos que me han pasado
 			for (int i = 0; i < tablaConDatos.size(); i++) {
 				// SI coincide con el nombre de a columna que estoy buscando se
@@ -148,15 +151,18 @@ public class AlgoritmoLogica {
 		for(TDatos datillos : meterEnMirar){
 			this.mirar.add(datillos);
 		}
+		// Para saber si estamos al principio
 		if(padre == null){
 			this.inforGeneral.put(this.nivel, this.mirar);
 		}
 	}
 	
+	// Metodo que calcula el resultado de la formula infor
 	private double infor(double p, double n){
 		return (-p*hacerLog(p)-n*hacerLog(n));
 	}
 	
+	// Metodo que calcula logaritmos en base 10
 	private double hacerLog(double dato){
 		if(dato == 0){
 			return 0.0;
@@ -164,20 +170,23 @@ public class AlgoritmoLogica {
 		return Math.log10(dato)/Math.log10(2);
 	}
 	
+	// Metodo que dara vueltas hasta que lleguemos al final del arbol
 	public boolean darVueltas() {
-		// Esto me servira para mas adelante
 		boolean cierto = true;
 		ArrayList<TDatos> auxMirar = this.mirar;
-
 		this.mirar = new ArrayList<>();
 		this.pintarTDatos = new ArrayList<>();
+		
+		// Miro que no se puedan dar mas vueltas
 		if(auxMirar.isEmpty()){
-			System.out.println("No se puede mas");
+			//System.out.println("No se puede mas");
 			cierto = false;
 		}
 		else{
 			this.nivel++;
+			// Me recorro toda las lista de TDatos generada en la anterior vuelta
 			for (TDatos nodo : auxMirar){
+				// Me aseguro de que se llega he llegado al final de la rama
 				if(nodo.getDatos().size() == 1 && nodo.getDatos().get(0).length == 1)
 					this.pintarTDatos.add(nodo);
 				else {
@@ -189,95 +198,45 @@ public class AlgoritmoLogica {
 		}		
 		return cierto;
 	}
-	public String ponerNEspacios(int n){
-		String result = "";
-		for(int i = 0; i < n; i++){
-			result += " ";
-		}
-		return result;
-	}
-	public String pintar2(){
-		int cont = 1;
-		String general = "";
-		String tab = "    ";
-		boolean titu = true;
-		
-		
+	
+	// Metodo que se guardara como quedan los datos
+	// despues de haber ejecutado el algoritmo 
+	// y haber optenido el arbol
+	public void guardarDatosParaMostrarlos(){
 		ArrayList<TDatos> pintar = this.inforGeneral.get(this.nivel);
 		this.datos = new String[pintar.size()][this.titulos.length];
-		System.out.println(this.titulos.length);
-		int [] maxTam = new int[this.titulos.length];
 		
-		for(int i = 0; i < this.titulos.length; i++){
-			maxTam[i] = this.titulos[i].length();
-		}
-		int ii = 0;
-		
+		int i = 0;
 		for(TDatos data: pintar){
-			int j = 0;
-			boolean cierto = true;
-			String pinto = "";
-			String tabla = "";
-			int pos = this.titulos.length-1;
+			int j = this.titulos.length-1;
+			
+			this.datos[i][j] =  pintaTabla(data.getDatos());
+			j--;
 			while(data != null){
 				String [] div = data.getHijoTipo().split(":");
-				
-				
-				if(div[0].length() > maxTam[pos]){
-					maxTam[pos] = div[0].length();
-				}
-				pos--;
-				pinto += div[0] + tab;
-				
-				
-				if(cierto){
-					cierto = false;
-					tabla += pintaTabla(data.getDatos());
-				}
+				this.datos[i][j] = div[0];
+				j--;
 				data = data.getPadre();
 			}
-			// Reordeno
-			String [] div = pinto.split(tab);
-			pinto ="";
 			
-			pos = 0;
-			for(int i = div.length-1; i >= 0; i--){
-				if(div[i].length()<maxTam[pos]){
-					div[i] += ponerNEspacios(maxTam[pos]-div[i].length());
-				}
-				this.datos[ii][j] = div[i];
-				j++;
-				pos++;
-				pinto += div[i]+ tab +" ";
-			}
-			this.datos[ii][j] = tabla;
-			String linea =  pinto + tab + tabla;
-			String guardar = cont + "\t" + linea;
-			general += guardar;
-			//System.out.println(guardar);
-			cont++;
-			ii++;
+			i++;
 		}
-		System.out.println(general);
-		return general;
 	}
 
-	
+	// Metodo que devuelve los o el valor de la tabla de "datos"
 	private String pintaTabla(ArrayList<String[]> datos){
 		String tabla = "";
 		for(int i = 0; i < datos.size(); i++){
 			for(int j = 0; j < datos.get(0).length; j++){
-				tabla += datos.get(i)[j];//+ "	";
+				tabla += datos.get(i)[j];
 			}
-			//tabla += System.lineSeparator();
 		}
 		return tabla;
 	}
 	
-	// Busca si la rama que nos ha metido el usuario existe
+	// Busca si la rama que nos ha metido el usuario, existe
 	public boolean search(HashMap<String, Integer> data1){
 		boolean cierto = false;
-		// Buscar
 		ArrayList<TDatos> lista = this.inforGeneral.get(this.nivel);
 		int i = 0;
 		// Me miro todos los posibles TDatos, o sea todas las ramas finales
@@ -288,7 +247,7 @@ public class AlgoritmoLogica {
 			// Me recorro todo el TDato para ver que estan todas las condiciones de la rama
 			while (data != null && !mirar) {
 				String[] div = data.getHijoTipo().split(":");
-				// Miro todo el array que me han pasado para ver si coincidad
+				// Miro todo el array que me han pasado para ver si coincide
 				// alguna
 
 				if (data1.containsKey(div[0])) {

@@ -1,5 +1,6 @@
 package CapaNegocio;
 
+// Transfer que almacena las operaciones del algoritmo
 public class TResultadosOperaciones {
 	private String nombre;
 	private int total;

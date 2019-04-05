@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import CapaNegocio.AlgoritmoLogica;
 
 public class CargarFicheros {
+	// Nombre de los ficheros a leer para obtener los datos
 	private String nombreFichero1 = "AtributosJuego.txt";
 	private String nombreFicheroDatos = "Juego.txt";
 
@@ -24,53 +25,36 @@ public class CargarFicheros {
 		this.nombresColumna = null;
 		this.datos = new ArrayList<>();
 		
-
-		// Exito
 		try {
 			this.cargarFichero1();
+			// Compruebo que se han cargado bien los nombres de las columnas
 			if (this.nombresColumna != null) {
 				this.cargarFicheroDatos();
+				// Compruebo que se han cargado bien los datos de la matriz
 				if (!this.datos.isEmpty()) {
 					//JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
-					// CONTINUAR POR AQUI
 					VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
-					//AlgoritmoLogica algoritmo = new AlgoritmoLogica(nombresColumna);
-					
-					// Para ver si ha cargado bien los datos
-					//pintar();
 				} else {
+					// Mensaje en caso de fallo
 					JOptionPane.showMessageDialog(null, "Esta vacio el fichero: " + this.nombreFicheroDatos);
 				}
 			} else {
+				// Mensaje en caso de fallo
 				JOptionPane.showMessageDialog(null, "Esta vacio el fichero: " + this.nombreFichero1);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Excepcion En CargarFicheros");
+			//e.printStackTrace();
+			// System.out.println("Excepcion En CargarFicheros");
 			JOptionPane.showMessageDialog(null, "Fallo al leer los fichero");
 		}
-	}
+	}	
 
-	private void pintar() {
-		for(int i = 0; i < this.nombresColumna.length; i++){
-			System.out.print(this.nombresColumna[i]+" ");
-		}
-		System.out.println("");
-		for(int i = 0; i < this.datos.size(); i++){
-			for(int j = 0; j < this.datos.get(i).length; j++){
-				System.out.print(this.datos.get(i)[j]+" ");
-			}
-			System.out.println("");
-		}
-	}
-	
-
+	// Metodo que carga los datos del fichero que tiene la matriz con todos los datos necesarios
 	private void cargarFicheroDatos() throws IOException {
 		String cadena;
 		FileReader f = new FileReader(this.nombreFicheroDatos);
 		BufferedReader b = new BufferedReader(f);
 		while ((cadena = b.readLine()) != null) {
-			//System.out.println(cadena);
 			String[] aux = cadena.split(",");
 			// Para que no coja lineas en blanco
 			if(!aux[0].equalsIgnoreCase(""))
@@ -85,14 +69,10 @@ public class CargarFicheros {
 	// Metodo que lee el fichero de los nombres de las columnas
 	private void cargarFichero1() throws IOException {
 		String cadena;
-		int tam = 1;
 		FileReader f = new FileReader(this.nombreFichero1);
 		BufferedReader b = new BufferedReader(f);
 		while ((cadena = b.readLine()) != null) {
-			//System.out.println(cadena);
 			this.nombresColumna = cadena.split(",");
-			
-			
 		}
 		b.close();
 	}

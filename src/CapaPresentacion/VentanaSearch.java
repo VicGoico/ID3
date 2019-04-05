@@ -2,6 +2,8 @@ package CapaPresentacion;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,6 +12,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -21,11 +25,9 @@ import javax.swing.JTextField;
 import CapaNegocio.AlgoritmoLogica;
 
 public class VentanaSearch extends JFrame{
-	//private JLabel mensaje;
-	//private JTextField informacion;
 	private JLabel respuesta;
+	private JLabel icono;
 	
-	// Faltan estos botones
 	private JButton buscar;
 	private JButton volverVentana;
 	
@@ -34,16 +36,15 @@ public class VentanaSearch extends JFrame{
 	private ArrayList<JPanel> todosLosPaneles;
 
 	
-	public VentanaSearch(AlgoritmoLogica logica, VentanaPrinicpal prin, String[]titulos){
+	public VentanaSearch(AlgoritmoLogica logica, VentanaPrinicpal prin){
 		this.logica = logica;
 		this.prin = prin;
-		init(titulos);
+		init();
 	}
-	private void init(String[]titulos){
+	private void init(){
 
 		this.setTitle("Buscar rama");
 		this.setLocationRelativeTo(null);
-		// this.setResizable(false);
 		
 		this.setSize(800, 400);
 		this.setLocation(400, 200);
@@ -52,20 +53,21 @@ public class VentanaSearch extends JFrame{
 		
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(new FlowLayout());
-		
-		
-		this.respuesta = new JLabel("");
-			
-			
-		//panel.add(this.mensaje);
-		//panel.add(this.informacion);
+
+		// Genera todos los JComboBox y JLabel dentro de un JPanel necesarios para la eleccion de los datos
 		this.todosLosPaneles = generarPaneles();
 		for(JPanel miniPanel: this.todosLosPaneles){
 			panel2.add(miniPanel);
 		}
 		this.add(panel2, BorderLayout.NORTH);
+		JPanel panel3 = new JPanel();
+		panel3.setLayout(new FlowLayout());
 		
-		this.add(this.respuesta, BorderLayout.CENTER);
+		this.respuesta = new JLabel("");
+		this.icono = new JLabel("");
+		panel3.add(this.icono);
+		panel3.add(this.respuesta);
+		this.add(panel3, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
@@ -76,17 +78,23 @@ public class VentanaSearch extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				HashMap<String, Integer> aux = new HashMap<>();
-				
+				// Hago este HashMap, para posteriormente hacer una busqueda sobre él
 				for(int i = 0; i < todosLosPaneles.size(); i++){
 					JPanel panelPrueba = (JPanel) panel2.getComponent(i);
 					JComboBox opcion = (JComboBox) panelPrueba.getComponent(1);
 					aux.put((String) opcion.getSelectedItem(), 1);
 				}
 				
-				
-				if (logica.search(aux)) {
-					respuesta.setText(logica.getRespuesta());
+				// Llamada para ver si la rama existe con esos datos
+				if (logica.search(aux)) {				
+					ImageIcon icon = new ImageIcon("images/resultado.png");
+					icono.setIcon(icon);
+					
+					respuesta.setText(logica.getRespuesta());	
+					respuesta.setFont(new Font("arial",Font.PLAIN, 30));
 				} else {
+					ImageIcon icon = new ImageIcon("images/mal.png");
+					icono.setIcon(icon);
 					respuesta.setText("No se encontro ninguna rama con esas condiciones");
 				}
 			}
@@ -107,7 +115,7 @@ public class VentanaSearch extends JFrame{
 		
 		this.setVisible(true);
 	}
-	// Para guardar todos los posibles valores
+	// Para guardar todos los posibles valores del arbol
 	private HashMap<String, ArrayList<String>> dameHashMap(){
 		HashMap<String, ArrayList<String>> result = new HashMap<>();
 		ArrayList<String> pequeno;
@@ -129,6 +137,8 @@ public class VentanaSearch extends JFrame{
 		return result;
 	}
 	
+	// Metodo que genera todos los JComboBox y JLabel 
+	// dentro de un JPanel necesarios para la eleccion de los datos
 	private ArrayList<JPanel> generarPaneles(){
 		HashMap<String, ArrayList<String>> listar = dameHashMap();
 		ArrayList<JPanel> result = new ArrayList<>();
@@ -144,6 +154,7 @@ public class VentanaSearch extends JFrame{
 			
 			campo = new JLabel(clave);
 			opciones = new JComboBox<>();
+			// Meto los datos en el JComboBox
 			for(String palabra: listar.get(clave)){
 				opciones.addItem(palabra);
 			}
@@ -151,8 +162,6 @@ public class VentanaSearch extends JFrame{
 			panel.add(opciones);
 			result.add(panel);
 		}
-		
-		
 		return result;
 	}
 }

@@ -39,10 +39,13 @@ public class VentanaPrinicpal extends JFrame {
 	public VentanaPrinicpal(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
 		this.titulosColumna = titulosColumna;
 		
+		// Ejecuto el algoritmo tantas veces como sea necesario para sacar todas las ramas posibles
 		this.algoritmo = new AlgoritmoLogica(this.titulosColumna, tablaConDatos);
 		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
 		while(this.algoritmo.darVueltas()){}
-		this.algoritmo.pintar2();
+		this.algoritmo.guardarDatosParaMostrarlos();
+		
+		// Guardo los datos para poder mostrar el JTable
 		int cont = 1;
 		this.columnas = new String[titulosColumna.length];
 		String []primer = this.algoritmo.getInforGeneral().get(0).getHijoTipo().split(":");
@@ -53,22 +56,15 @@ public class VentanaPrinicpal extends JFrame {
 		}
 		// Añado el nombre del ultimo campo de los titulos
 		this.columnas[this.columnas.length-1] = this.titulosColumna[this.titulosColumna.length-1];
-		
-		
 		this.tabla = (Object[][]) algoritmo.getTabla();
-		init();
 		
 		
-		
-	}
-	public VentanaPrinicpal(){
 		init();
 	}
 
 	private void init() {
 		 this.setTitle("Algoritmo ID3");	
 		 this.setLocationRelativeTo(null);
-		 //this.setResizable(false);
 		 
 		 this.setSize(600, 400);
 		 this.setLocation(400, 200);
@@ -81,11 +77,9 @@ public class VentanaPrinicpal extends JFrame {
 		 
 		 
 		 this.lienzo = new JTable(this.tabla, this.columnas);
-		 // Probar cual es el mejor tamaño
 		 
 		 this.lienzo.setEnabled(false);
 		 this.add(new JScrollPane(this.lienzo, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
-		// this.add(this.lienzo, BorderLayout.CENTER);
 		 
 		 JPanel panel = new JPanel();
 		 panel.setLayout(new FlowLayout());
@@ -94,7 +88,7 @@ public class VentanaPrinicpal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance(), titulosColumna);
+				VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance());
 				setVisible(false);
 			}
 		});
