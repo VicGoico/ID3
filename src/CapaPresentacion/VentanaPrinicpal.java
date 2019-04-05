@@ -89,7 +89,6 @@ public class VentanaPrinicpal extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance());
-				setVisible(false);
 			}
 		});
 		panel.add(this.otraVuelta);

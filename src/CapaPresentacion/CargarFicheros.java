@@ -1,17 +1,11 @@
 package CapaPresentacion;
 
-import java.awt.HeadlessException;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.JOptionPane;
-
-import CapaNegocio.AlgoritmoLogica;
 
 public class CargarFicheros {
 	// Nombre de los ficheros a leer para obtener los datos
@@ -33,6 +27,7 @@ public class CargarFicheros {
 				// Compruebo que se han cargado bien los datos de la matriz
 				if (!this.datos.isEmpty()) {
 					//JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
+					@SuppressWarnings("unused")
 					VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
 				} else {
 					// Mensaje en caso de fallo

@@ -64,6 +64,7 @@ public class VentanaSearch extends JFrame{
 		panel3.setLayout(new FlowLayout());
 		
 		this.respuesta = new JLabel("");
+		this.respuesta.setFont(new Font("arial",Font.PLAIN, 30));
 		this.icono = new JLabel("");
 		panel3.add(this.icono);
 		panel3.add(this.respuesta);
@@ -87,11 +88,11 @@ public class VentanaSearch extends JFrame{
 				
 				// Llamada para ver si la rama existe con esos datos
 				if (logica.search(aux)) {				
-					ImageIcon icon = new ImageIcon("images/resultado.png");
+					ImageIcon icon = new ImageIcon("src/images/resultado.png");
 					icono.setIcon(icon);
 					
 					respuesta.setText(logica.getRespuesta());	
-					respuesta.setFont(new Font("arial",Font.PLAIN, 30));
+					
 				} else {
 					ImageIcon icon = new ImageIcon("images/mal.png");
 					icono.setIcon(icon);
@@ -105,7 +106,6 @@ public class VentanaSearch extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
-				prin.setVisible(true);
 			}
 		});
 		panel.add(this.buscar);
