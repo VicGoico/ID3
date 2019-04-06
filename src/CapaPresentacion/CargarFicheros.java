@@ -40,7 +40,7 @@ public class CargarFicheros {
 		} catch (Exception e) {
 			//e.printStackTrace();
 			// System.out.println("Excepcion En CargarFicheros");
-			JOptionPane.showMessageDialog(null, "Fallo al leer los fichero");
+			JOptionPane.showMessageDialog(null, "Fallo al leer los fichero, asegurate que el ejecutable esta en la misma carpeta que los ficheros");
 		}
 	}	
 
