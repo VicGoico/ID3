@@ -34,14 +34,25 @@ public class VentanaSearch extends JFrame{
 	private ImageIcon iconRespuesta;
 	private ImageIcon iconError;
 	
-	private AlgoritmoLogica logica;
+	private AlgoritmoLogica algoritmo;
 	private VentanaPrinicpal prin;
 	private ArrayList<JPanel> todosLosPaneles;
 
 	
-	public VentanaSearch(AlgoritmoLogica logica, VentanaPrinicpal prin){
-		this.logica = logica;
-		this.prin = prin;
+	public VentanaSearch(String[] titulosColumna, ArrayList<String[]> tablaConDatos){
+		// Ejecuto el algoritmo tantas veces como sea necesario para sacar todas las ramas posibles
+		this.algoritmo = new AlgoritmoLogica(titulosColumna, tablaConDatos);
+		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
+
+		while (this.algoritmo.darVueltas()) {
+
+		}
+		this.algoritmo.guardarDatosParaMostrarlos();
+		this.algoritmo.parche();
+		this.algoritmo.convertir();
+		
+		//this.logica = logica;
+		//this.prin = prin;
 		this.iconRespuesta =  new ImageIcon(getClass().getResource("/images/resultado.png"));
 		this.iconError = new ImageIcon(getClass().getResource("/images/mal.png")); 
 		init();
@@ -84,31 +95,28 @@ public class VentanaSearch extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				HashMap<String, Integer> aux = new HashMap<>();
+				ArrayList<String> aux2 = new ArrayList<>();
 				// Hago este HashMap, para posteriormente hacer una busqueda sobre él
 				for(int i = 0; i < todosLosPaneles.size(); i++){
 					JPanel panelPrueba = (JPanel) panel2.getComponent(i);
 					JComboBox opcion = (JComboBox) panelPrueba.getComponent(1);
 					aux.put((String) opcion.getSelectedItem(), 1);
+					aux2.add((String) opcion.getSelectedItem());
 				}
 				
 				// Llamada para ver si la rama existe con esos datos
-				if (logica.search(aux)) {
-					icono.setIcon(iconRespuesta);
-					
-					respuesta.setText(logica.getRespuesta());	
-					
-				} else {
-					icono.setIcon(iconError);
-					respuesta.setText("No se encontro ninguna rama con esas condiciones");
-				}
+				String res = algoritmo.search(aux2);
+				icono.setIcon(iconRespuesta);
+				respuesta.setText(res);
 			}
 		});
-		this.volverVentana = new JButton("Volver");
+		this.volverVentana = new JButton("Salir");
 		this.volverVentana.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				//setVisible(false);
+				System.exit(0);
 			}
 		});
 		panel.add(this.buscar);
@@ -124,16 +132,16 @@ public class VentanaSearch extends JFrame{
 		ArrayList<String> pequeno;
 		HashMap<String, Integer> local;
 		
-		for(int j = 0; j < this.logica.getTitulos().length-1; j++){
+		for(int j = 0; j < this.algoritmo.getTitulos().length-1; j++){
 			pequeno = new ArrayList<>();
 			local = new HashMap<>();
-			for(int i = 0; i < this.logica.getTablaDatos().size(); i++){
-				if(!local.containsKey(this.logica.getTablaDatos().get(i)[j])){
-					local.put(this.logica.getTablaDatos().get(i)[j], 1);
-					pequeno.add(this.logica.getTablaDatos().get(i)[j]);
+			for(int i = 0; i < this.algoritmo.getTablaDatos().size(); i++){
+				if(!local.containsKey(this.algoritmo.getTablaDatos().get(i)[j])){
+					local.put(this.algoritmo.getTablaDatos().get(i)[j], 1);
+					pequeno.add(this.algoritmo.getTablaDatos().get(i)[j]);
 				}
 			}
-			result.put(this.logica.getTitulos()[j], pequeno);
+			result.put(this.algoritmo.getTitulos()[j], pequeno);
 		}
 		
 		
@@ -150,8 +158,8 @@ public class VentanaSearch extends JFrame{
 		JComboBox opciones;
 		
 		
-		for(int i = 0; i < this.logica.getTitulos().length-1; i++){
-			String clave = this.logica.getTitulos()[i];
+		for(int i = 0; i < this.algoritmo.getTitulos().length-1; i++){
+			String clave = this.algoritmo.getTitulos()[i];
 			panel = new JPanel();
 			panel.setLayout(new FlowLayout());
 			

@@ -27,8 +27,9 @@ public class CargarFicheros {
 				// Compruebo que se han cargado bien los datos de la matriz
 				if (!this.datos.isEmpty()) {
 					//JOptionPane.showMessageDialog(null, "Los ficheros se cargaron con exito");
-					@SuppressWarnings("unused")
-					VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
+					//@SuppressWarnings("unused")
+					//VentanaPrinicpal ventana = new VentanaPrinicpal(nombresColumna, datos);
+					VentanaSearch ventana = new VentanaSearch(nombresColumna, datos);
 				} else {
 					// Mensaje en caso de fallo
 					JOptionPane.showMessageDialog(null, "Esta vacio el fichero: " + this.nombreFicheroDatos);
@@ -54,7 +55,6 @@ public class CargarFicheros {
 			// Para que no coja lineas en blanco
 			if(!aux[0].equalsIgnoreCase(""))
 				this.datos.add(aux);
-			
 		}
 		b.close();
 	}

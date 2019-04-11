@@ -40,10 +40,15 @@ public class VentanaPrinicpal extends JFrame {
 		this.titulosColumna = titulosColumna;
 		
 		// Ejecuto el algoritmo tantas veces como sea necesario para sacar todas las ramas posibles
-		this.algoritmo = new AlgoritmoLogica(this.titulosColumna, tablaConDatos);
+		this.algoritmo = new AlgoritmoLogica(titulosColumna, tablaConDatos);
 		this.algoritmo.primeraVuelta(titulosColumna, tablaConDatos, null);
-		while(this.algoritmo.darVueltas()){}
+		
+		while(this.algoritmo.darVueltas()){
+			
+		}
 		this.algoritmo.guardarDatosParaMostrarlos();
+		this.algoritmo.parche();
+		this.algoritmo.convertir();
 		
 		// Guardo los datos para poder mostrar el JTable
 		int cont = 1;
@@ -88,7 +93,7 @@ public class VentanaPrinicpal extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance());
+				//VentanaSearch buscar = new VentanaSearch(algoritmo, getInstance());
 			}
 		});
 		panel.add(this.otraVuelta);

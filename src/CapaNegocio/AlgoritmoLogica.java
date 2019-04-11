@@ -3,6 +3,8 @@ package CapaNegocio;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.omg.Messaging.SyncScopeHelper;
+
 public class AlgoritmoLogica {
 	private String[] titulos;
 	private ArrayList<String[]> tablaDatos;
@@ -14,6 +16,10 @@ public class AlgoritmoLogica {
 	private ArrayList<TDatos> pintarTDatos;
 	private String[][] datos;	
 	private String respuesta;
+	
+	// Atributo para guardar el arbol
+	private HashMap<String, TData> mapaBusqueda;
+	private ArrayList<String[]> tratar;
 	
 	
 	public AlgoritmoLogica(String [] titulos, ArrayList<String[]> tablaDatos){
@@ -113,6 +119,8 @@ public class AlgoritmoLogica {
 			}
 		}
 
+		
+		
 		// Aqui nos guardaremos un ArrayList de tipo TDatos para una proxima vuelta
 		// Miro los nombres de un tipo determinado
 		for (String nombre : this.nombresImpo) {
@@ -141,6 +149,7 @@ public class AlgoritmoLogica {
 
 			nuevo.setTitulos(titulosTDatos);
 			nuevo.setPadre(padre);
+			
 			meterEnMirar.add(nuevo);
 		}
 
@@ -230,37 +239,87 @@ public class AlgoritmoLogica {
 		}
 		return tabla;
 	}
+	public void convertir(){
+		this.tratar = new ArrayList<>();
+		for(int i = 0; i < this.datos.length; i++){
+			String [] aux = new String[this.datos[0].length];
+			for(int j = 0; j < this.datos[0].length; j++){
+				aux[j] = this.datos[i][j];
+			}
+			this.tratar.add(i, aux);
+		}
+	}
 	
 	// Busca si la rama que nos ha metido el usuario, existe
-	public boolean search(HashMap<String, Integer> data1){
-		boolean cierto = false;
-		ArrayList<TDatos> lista = this.inforGeneral.get(this.nivel);
-		int i = 0;
-		// Me miro todos los posibles TDatos, o sea todas las ramas finales
-		while(!cierto &&  i < lista.size()){
-			TDatos data = lista.get(i);
-			this.respuesta = pintaTabla(data.getDatos());
-			boolean mirar = false;
-			// Me recorro todo el TDato para ver que estan todas las condiciones de la rama
-			while (data != null && !mirar) {
-				String[] div = data.getHijoTipo().split(":");
-				// Miro todo el array que me han pasado para ver si coincide
-				// alguna
-
-				if (data1.containsKey(div[0])) {
-					data = data.getPadre();
-				} else {
-					mirar = true;
+	public String search(ArrayList<String> data1){
+		String result = "";
+		String datoComparar = data1.get(0);
+		boolean cierto = false;		
+		int columna = 0, indiceLista = 0, indiceRespuesta = this.datos[0].length-1;
+		ArrayList<String[]> meRecorro = this.tratar;
+		ArrayList<String[]> cambio = new ArrayList<>();
+		
+		while(!cierto){
+			// Leo todas las ramas posibles
+			for(int i = 0; i < meRecorro.size(); i++){
+				if(datoComparar.equalsIgnoreCase(meRecorro.get(i)[columna])){
+					// Me guardo la respuesta
+					if(result.equalsIgnoreCase("")){
+						result = meRecorro.get(i)[indiceRespuesta];
+					}
+					cambio.add(meRecorro.get(i));
 				}
 			}
-			// Miro si ha salido la rama que estaba buscando
-			if(!mirar){
+			// Miro si son todos sis o noes
+			int veces = 0;
+			for(int i = 0; i < cambio.size(); i++){
+				if(!result.equalsIgnoreCase(cambio.get(i)[indiceRespuesta])){
+					veces++;
+				}
+			}
+			if(veces == 0){
 				cierto = true;
 			}
-			i++;
-		}
-		return cierto;
+			else{
+				// Avanzar
+				meRecorro = cambio;
+				result = "";
+				cambio = new ArrayList<>();
+				columna++;
+				indiceLista++;
+				HashMap<String, Integer> buscar = new HashMap<>();
+				for(int i = 0; i < meRecorro.size(); i++){
+					if(!buscar.containsKey(meRecorro.get(i)[indiceLista])){
+						buscar.put(meRecorro.get(i)[indiceLista], 1);
+					}
+				}
+				int i = 0;
+				boolean encontrado = false;
+				while(i < data1.size() && !encontrado){
+					if(buscar.containsKey(data1.get(i))){
+						encontrado = true;
+						datoComparar = data1.get(i);
+					}
+					i++;
+				}
+			}
+		}		
+		return result;
 	}
+	
+	public void parche(){
+		String total = "";
+		for(int i = 0; i < this.datos.length; i++){
+			String linea = "";
+			for(int j = 0; j < this.datos[i].length; j++){
+				linea += this.datos[i][j]+" ";
+			}
+			linea += System.lineSeparator();
+			total += linea;
+		}
+		System.out.println(total);
+	}
+	
 	
 	public String[][] getTabla(){
 		return this.datos;
@@ -277,4 +336,31 @@ public class AlgoritmoLogica {
 	public String getRespuesta(){
 		return this.respuesta;
 	}
+	
+	//boolean cierto = false;
+			/*ArrayList<TDatos> lista = this.inforGeneral.get(this.nivel);
+			int i = 0;
+			// Me miro todos los posibles TDatos, o sea todas las ramas finales
+			while(!cierto &&  i < lista.size()){
+				TDatos data = lista.get(i);
+				this.respuesta = pintaTabla(data.getDatos());
+				boolean mirar = false;
+				// Me recorro todo el TDato para ver que estan todas las condiciones de la rama
+				while (data != null && !mirar) {
+					String[] div = data.getHijoTipo().split(":");
+					// Miro todo el array que me han pasado para ver si coincide
+					// alguna
+
+					if (data1.containsKey(div[0])) {
+						data = data.getPadre();
+					} else {
+						mirar = true;
+					}
+				}
+				// Miro si ha salido la rama que estaba buscando
+				if(!mirar){
+					cierto = true;
+				}
+				i++;
+			}*/
 }
